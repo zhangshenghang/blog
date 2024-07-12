@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Elasticsearch Pipeline 详解 | Jast blog</title>
+    <meta name="generator" content="VuePress 1.9.5">
+    <link rel="icon" href="/img/favicon.ico">
+    <meta name="description" content="后端技术博客,专注大数据、java后端、运维学习与总结。Hadoop、Hbase、Spark、Flink等技术文章。">
+    <meta name="keywords" content="前端博客,个人技术博客,前端,前端开发,前端框架,web前端,前端面试题,技术文档,学习,面试,JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github,markdown">
+    <meta name="baidu-site-verification" content="7F55weZDDc">
+    <meta name="theme-color" content="#11a8cd">
+    
+    <link rel="preload" href="/assets/css/0.styles.52c5fec9.css" as="style"><link rel="preload" href="/assets/js/app.06cc3a6d.js" as="script"><link rel="preload" href="/assets/js/2.dee4bc9e.js" as="script"><link rel="preload" href="/assets/js/144.6ab29f67.js" as="script"><link rel="prefetch" href="/assets/js/10.a8139f4c.js"><link rel="prefetch" href="/assets/js/100.6e6e667d.js"><link rel="prefetch" href="/assets/js/101.de152016.js"><link rel="prefetch" href="/assets/js/102.bbcdbbae.js"><link rel="prefetch" href="/assets/js/103.b6092c1f.js"><link rel="prefetch" href="/assets/js/104.ba03f28e.js"><link rel="prefetch" href="/assets/js/105.3218beb0.js"><link rel="prefetch" href="/assets/js/106.b7541408.js"><link rel="prefetch" href="/assets/js/107.6ea3258d.js"><link rel="prefetch" href="/assets/js/108.02027b50.js"><link rel="prefetch" href="/assets/js/109.a00537b7.js"><link rel="prefetch" href="/assets/js/11.88aba531.js"><link rel="prefetch" href="/assets/js/110.67fd12ce.js"><link rel="prefetch" href="/assets/js/111.86d26839.js"><link rel="prefetch" href="/assets/js/112.64d3f5f8.js"><link rel="prefetch" href="/assets/js/113.abb634f8.js"><link rel="prefetch" href="/assets/js/114.8fa32d70.js"><link rel="prefetch" href="/assets/js/115.346358d9.js"><link rel="prefetch" href="/assets/js/116.ac814793.js"><link rel="prefetch" href="/assets/js/117.643d1eb6.js"><link rel="prefetch" href="/assets/js/118.1361d73c.js"><link rel="prefetch" href="/assets/js/119.c6d48422.js"><link rel="prefetch" href="/assets/js/12.3c0263cc.js"><link rel="prefetch" href="/assets/js/120.f951f22f.js"><link rel="prefetch" href="/assets/js/121.6d1f428b.js"><link rel="prefetch" href="/assets/js/122.839783af.js"><link rel="prefetch" href="/assets/js/123.994f1fce.js"><link rel="prefetch" href="/assets/js/124.8191fd00.js"><link rel="prefetch" href="/assets/js/125.bea68a79.js"><link rel="prefetch" href="/assets/js/126.ed7a13e8.js"><link rel="prefetch" href="/assets/js/127.aa50fb5d.js"><link rel="prefetch" href="/assets/js/128.ec0606da.js"><link rel="prefetch" href="/assets/js/129.864559ad.js"><link rel="prefetch" href="/assets/js/13.87abcb96.js"><link rel="prefetch" href="/assets/js/130.e044d2f7.js"><link rel="prefetch" href="/assets/js/131.e0d18284.js"><link rel="prefetch" href="/assets/js/132.62a19c25.js"><link rel="prefetch" href="/assets/js/133.dd80dec8.js"><link rel="prefetch" href="/assets/js/134.96b9c57d.js"><link rel="prefetch" href="/assets/js/135.39eef25b.js"><link rel="prefetch" href="/assets/js/136.16567a7a.js"><link rel="prefetch" href="/assets/js/137.d72f1fce.js"><link rel="prefetch" href="/assets/js/138.85e77b40.js"><link rel="prefetch" href="/assets/js/139.3186ea2c.js"><link rel="prefetch" href="/assets/js/14.f369bd47.js"><link rel="prefetch" href="/assets/js/140.5649cf36.js"><link rel="prefetch" href="/assets/js/141.e78a6cba.js"><link rel="prefetch" href="/assets/js/142.8d4bf8df.js"><link rel="prefetch" href="/assets/js/143.881e3468.js"><link rel="prefetch" href="/assets/js/145.7f8478e6.js"><link rel="prefetch" href="/assets/js/146.48c6aa6c.js"><link rel="prefetch" href="/assets/js/147.cc799ca6.js"><link rel="prefetch" href="/assets/js/148.ec8e6934.js"><link rel="prefetch" href="/assets/js/149.37d2976a.js"><link rel="prefetch" href="/assets/js/15.21f5f41a.js"><link rel="prefetch" href="/assets/js/150.a1d97631.js"><link rel="prefetch" href="/assets/js/151.a6524103.js"><link rel="prefetch" href="/assets/js/152.357b651b.js"><link rel="prefetch" href="/assets/js/153.8a5f4aa0.js"><link rel="prefetch" href="/assets/js/154.eb9e4329.js"><link rel="prefetch" href="/assets/js/155.dd2f057f.js"><link rel="prefetch" href="/assets/js/156.08df0e0e.js"><link rel="prefetch" href="/assets/js/157.66f10b42.js"><link rel="prefetch" href="/assets/js/158.53e337bd.js"><link rel="prefetch" href="/assets/js/159.395153ff.js"><link rel="prefetch" href="/assets/js/16.1bdac92f.js"><link rel="prefetch" href="/assets/js/160.b14f4976.js"><link rel="prefetch" href="/assets/js/161.596ea0b2.js"><link rel="prefetch" href="/assets/js/162.ce5d6ed2.js"><link rel="prefetch" href="/assets/js/163.ca51154a.js"><link rel="prefetch" href="/assets/js/164.e1239895.js"><link rel="prefetch" href="/assets/js/165.8e884485.js"><link rel="prefetch" href="/assets/js/166.575b5a98.js"><link rel="prefetch" href="/assets/js/167.366750ea.js"><link rel="prefetch" href="/assets/js/168.1e1968f3.js"><link rel="prefetch" href="/assets/js/169.1160dd79.js"><link rel="prefetch" href="/assets/js/17.f981b4f4.js"><link rel="prefetch" href="/assets/js/170.40e451d6.js"><link rel="prefetch" href="/assets/js/171.ea317d19.js"><link rel="prefetch" href="/assets/js/172.7c8ccadf.js"><link rel="prefetch" href="/assets/js/173.78ab8e5c.js"><link rel="prefetch" href="/assets/js/174.71889b56.js"><link rel="prefetch" href="/assets/js/175.dbe4ba06.js"><link rel="prefetch" href="/assets/js/176.eec9f10c.js"><link rel="prefetch" href="/assets/js/177.119e38dc.js"><link rel="prefetch" href="/assets/js/178.90e8af45.js"><link rel="prefetch" href="/assets/js/179.0aedf017.js"><link rel="prefetch" href="/assets/js/18.a7440983.js"><link rel="prefetch" href="/assets/js/180.2ff07351.js"><link rel="prefetch" href="/assets/js/181.6f6a3e1a.js"><link rel="prefetch" href="/assets/js/182.c06d017d.js"><link rel="prefetch" href="/assets/js/183.3fddb5cf.js"><link rel="prefetch" href="/assets/js/184.cd086619.js"><link rel="prefetch" href="/assets/js/185.0cafcfc3.js"><link rel="prefetch" href="/assets/js/186.cf251e20.js"><link rel="prefetch" href="/assets/js/187.85608026.js"><link rel="prefetch" href="/assets/js/188.a25ea538.js"><link rel="prefetch" href="/assets/js/189.9f61d218.js"><link rel="prefetch" href="/assets/js/19.389e8a9e.js"><link rel="prefetch" href="/assets/js/190.abdf05ef.js"><link rel="prefetch" href="/assets/js/191.eba6c39e.js"><link rel="prefetch" href="/assets/js/192.ea89b546.js"><link rel="prefetch" href="/assets/js/193.44fe7102.js"><link rel="prefetch" href="/assets/js/194.b6cbb71c.js"><link rel="prefetch" href="/assets/js/195.94662356.js"><link rel="prefetch" href="/assets/js/196.1f542fa4.js"><link rel="prefetch" href="/assets/js/197.bc086b24.js"><link rel="prefetch" href="/assets/js/198.22273287.js"><link rel="prefetch" href="/assets/js/199.37ea01e0.js"><link rel="prefetch" href="/assets/js/20.eefa330d.js"><link rel="prefetch" href="/assets/js/200.424a4cfe.js"><link rel="prefetch" href="/assets/js/201.de57872d.js"><link rel="prefetch" href="/assets/js/202.ab911397.js"><link rel="prefetch" href="/assets/js/203.52bac5ac.js"><link rel="prefetch" href="/assets/js/204.a62536b4.js"><link rel="prefetch" href="/assets/js/205.a31ede99.js"><link rel="prefetch" href="/assets/js/206.a1b8715a.js"><link rel="prefetch" href="/assets/js/207.5bd01d64.js"><link rel="prefetch" href="/assets/js/208.8d843943.js"><link rel="prefetch" href="/assets/js/209.bf1aecee.js"><link rel="prefetch" href="/assets/js/21.db7b1e95.js"><link rel="prefetch" href="/assets/js/210.b4af2368.js"><link rel="prefetch" href="/assets/js/211.7f7bd202.js"><link rel="prefetch" href="/assets/js/212.3ef128d8.js"><link rel="prefetch" href="/assets/js/213.656de149.js"><link rel="prefetch" href="/assets/js/214.6b59bc71.js"><link rel="prefetch" href="/assets/js/215.a3ded7de.js"><link rel="prefetch" href="/assets/js/216.5f2c7e71.js"><link rel="prefetch" href="/assets/js/217.1581f191.js"><link rel="prefetch" href="/assets/js/218.5a2cedd0.js"><link rel="prefetch" href="/assets/js/219.85aaade5.js"><link rel="prefetch" href="/assets/js/22.0be5bcc7.js"><link rel="prefetch" href="/assets/js/220.399e90fa.js"><link rel="prefetch" href="/assets/js/221.5d8ccd4a.js"><link rel="prefetch" href="/assets/js/222.b213f67a.js"><link rel="prefetch" href="/assets/js/223.be64260a.js"><link rel="prefetch" href="/assets/js/224.53e68f5d.js"><link rel="prefetch" href="/assets/js/225.024ceeeb.js"><link rel="prefetch" href="/assets/js/226.8080de78.js"><link rel="prefetch" href="/assets/js/227.8d65b2a9.js"><link rel="prefetch" href="/assets/js/228.52023114.js"><link rel="prefetch" href="/assets/js/229.3ffb9819.js"><link rel="prefetch" href="/assets/js/23.14020532.js"><link rel="prefetch" href="/assets/js/230.454b7cba.js"><link rel="prefetch" href="/assets/js/231.b642b508.js"><link rel="prefetch" href="/assets/js/232.86592354.js"><link rel="prefetch" href="/assets/js/233.45d3d236.js"><link rel="prefetch" href="/assets/js/234.e2d4a3e2.js"><link rel="prefetch" href="/assets/js/235.e5edda5d.js"><link rel="prefetch" href="/assets/js/236.3a044677.js"><link rel="prefetch" href="/assets/js/237.1e99c15a.js"><link rel="prefetch" href="/assets/js/238.91a2a7e5.js"><link rel="prefetch" href="/assets/js/239.04c71634.js"><link rel="prefetch" href="/assets/js/24.3833ab1a.js"><link rel="prefetch" href="/assets/js/240.f052af2c.js"><link rel="prefetch" href="/assets/js/241.2af09cc5.js"><link rel="prefetch" href="/assets/js/242.8243cca2.js"><link rel="prefetch" href="/assets/js/243.0b09718f.js"><link rel="prefetch" href="/assets/js/244.b840afd3.js"><link rel="prefetch" href="/assets/js/245.1adc5b07.js"><link rel="prefetch" href="/assets/js/246.4d69ef6a.js"><link rel="prefetch" href="/assets/js/247.db69ea2b.js"><link rel="prefetch" href="/assets/js/248.3bcdaa87.js"><link rel="prefetch" href="/assets/js/249.14432eee.js"><link rel="prefetch" href="/assets/js/25.57872f60.js"><link rel="prefetch" href="/assets/js/250.cda610f4.js"><link rel="prefetch" href="/assets/js/251.d57a419c.js"><link rel="prefetch" href="/assets/js/252.9378cb87.js"><link rel="prefetch" href="/assets/js/253.4ed97f05.js"><link rel="prefetch" href="/assets/js/254.6b8170f8.js"><link rel="prefetch" href="/assets/js/255.e7111148.js"><link rel="prefetch" href="/assets/js/256.13886dfe.js"><link rel="prefetch" href="/assets/js/257.b34583ba.js"><link rel="prefetch" href="/assets/js/258.9e90182c.js"><link rel="prefetch" href="/assets/js/259.0a7fe9e4.js"><link rel="prefetch" href="/assets/js/26.8b68d884.js"><link rel="prefetch" href="/assets/js/260.eb2428bb.js"><link rel="prefetch" href="/assets/js/261.47e2e24f.js"><link rel="prefetch" href="/assets/js/262.a7e557c1.js"><link rel="prefetch" href="/assets/js/263.c8d07cd6.js"><link rel="prefetch" href="/assets/js/264.a19ae3e9.js"><link rel="prefetch" href="/assets/js/265.f810c947.js"><link rel="prefetch" href="/assets/js/266.b2609a65.js"><link rel="prefetch" href="/assets/js/267.6ff06fe1.js"><link rel="prefetch" href="/assets/js/268.261342d3.js"><link rel="prefetch" href="/assets/js/269.654ad014.js"><link rel="prefetch" href="/assets/js/27.a4cbb3e6.js"><link rel="prefetch" href="/assets/js/270.43edea37.js"><link rel="prefetch" href="/assets/js/271.eaac3b6c.js"><link rel="prefetch" href="/assets/js/272.9fd8344c.js"><link rel="prefetch" href="/assets/js/273.e8898f9d.js"><link rel="prefetch" href="/assets/js/274.7fbf7cc0.js"><link rel="prefetch" href="/assets/js/275.9adf4a10.js"><link rel="prefetch" href="/assets/js/276.ec8dd1fa.js"><link rel="prefetch" href="/assets/js/277.4be29aab.js"><link rel="prefetch" href="/assets/js/278.1ddd39bc.js"><link rel="prefetch" href="/assets/js/279.52492e44.js"><link rel="prefetch" href="/assets/js/28.98fd88d3.js"><link rel="prefetch" href="/assets/js/280.672ef2a5.js"><link rel="prefetch" href="/assets/js/281.75c33f1d.js"><link rel="prefetch" href="/assets/js/282.0eff35b4.js"><link rel="prefetch" href="/assets/js/283.562ae508.js"><link rel="prefetch" href="/assets/js/284.9b0767a6.js"><link rel="prefetch" href="/assets/js/285.f871776b.js"><link rel="prefetch" href="/assets/js/286.9c1f1e03.js"><link rel="prefetch" href="/assets/js/287.53ce6fda.js"><link rel="prefetch" href="/assets/js/288.95da5a3f.js"><link rel="prefetch" href="/assets/js/289.e18084da.js"><link rel="prefetch" href="/assets/js/29.4406717f.js"><link rel="prefetch" href="/assets/js/290.cd84d0af.js"><link rel="prefetch" href="/assets/js/291.6110b20e.js"><link rel="prefetch" href="/assets/js/292.931e018e.js"><link rel="prefetch" href="/assets/js/293.3143d7d8.js"><link rel="prefetch" href="/assets/js/294.db30a5b9.js"><link rel="prefetch" href="/assets/js/295.047624ca.js"><link rel="prefetch" href="/assets/js/296.e886f3d5.js"><link rel="prefetch" href="/assets/js/297.52d9aaaf.js"><link rel="prefetch" href="/assets/js/298.69eb439c.js"><link rel="prefetch" href="/assets/js/299.989651a0.js"><link rel="prefetch" href="/assets/js/3.a042c718.js"><link rel="prefetch" href="/assets/js/30.5f3844f0.js"><link rel="prefetch" href="/assets/js/300.e69ba50f.js"><link rel="prefetch" href="/assets/js/301.a38187c9.js"><link rel="prefetch" href="/assets/js/302.5b45f61c.js"><link rel="prefetch" href="/assets/js/303.d10d3baa.js"><link rel="prefetch" href="/assets/js/31.a3ec9ffa.js"><link rel="prefetch" href="/assets/js/32.e4d0e0d9.js"><link rel="prefetch" href="/assets/js/33.bb976f01.js"><link rel="prefetch" href="/assets/js/34.1470b7a5.js"><link rel="prefetch" href="/assets/js/35.9abb0030.js"><link rel="prefetch" href="/assets/js/36.7be19973.js"><link rel="prefetch" href="/assets/js/37.4785a110.js"><link rel="prefetch" href="/assets/js/38.e26d9389.js"><link rel="prefetch" href="/assets/js/39.17fb7e8e.js"><link rel="prefetch" href="/assets/js/4.654a78a2.js"><link rel="prefetch" href="/assets/js/40.5d21d291.js"><link rel="prefetch" href="/assets/js/41.a69782d8.js"><link rel="prefetch" href="/assets/js/42.e1296144.js"><link rel="prefetch" href="/assets/js/43.5072368d.js"><link rel="prefetch" href="/assets/js/44.9ba2e3cf.js"><link rel="prefetch" href="/assets/js/45.057c0138.js"><link rel="prefetch" href="/assets/js/46.95c16096.js"><link rel="prefetch" href="/assets/js/47.d95ce7b9.js"><link rel="prefetch" href="/assets/js/48.d5e1b404.js"><link rel="prefetch" href="/assets/js/49.4ab03798.js"><link rel="prefetch" href="/assets/js/5.6c8256eb.js"><link rel="prefetch" href="/assets/js/50.ad516c1c.js"><link rel="prefetch" href="/assets/js/51.f49175fd.js"><link rel="prefetch" href="/assets/js/52.943f3ccb.js"><link rel="prefetch" href="/assets/js/53.40137421.js"><link rel="prefetch" href="/assets/js/54.739b6311.js"><link rel="prefetch" href="/assets/js/55.0c1da6d3.js"><link rel="prefetch" href="/assets/js/56.5ff4d42f.js"><link rel="prefetch" href="/assets/js/57.90e2ead8.js"><link rel="prefetch" href="/assets/js/58.7d92eb68.js"><link rel="prefetch" href="/assets/js/59.b015b5a0.js"><link rel="prefetch" href="/assets/js/6.adbf4803.js"><link rel="prefetch" href="/assets/js/60.4ee34e8a.js"><link rel="prefetch" href="/assets/js/61.b5b48718.js"><link rel="prefetch" href="/assets/js/62.ad08494f.js"><link rel="prefetch" href="/assets/js/63.1725552a.js"><link rel="prefetch" href="/assets/js/64.f5eb7a04.js"><link rel="prefetch" href="/assets/js/65.ffaa87c2.js"><link rel="prefetch" href="/assets/js/66.fcc12d1f.js"><link rel="prefetch" href="/assets/js/67.53d2aa2c.js"><link rel="prefetch" href="/assets/js/68.9ca787e0.js"><link rel="prefetch" href="/assets/js/69.e6f4f386.js"><link rel="prefetch" href="/assets/js/7.aa514560.js"><link rel="prefetch" href="/assets/js/70.ea844a46.js"><link rel="prefetch" href="/assets/js/71.83a619ec.js"><link rel="prefetch" href="/assets/js/72.d60670d4.js"><link rel="prefetch" href="/assets/js/73.905880b3.js"><link rel="prefetch" href="/assets/js/74.27bf1391.js"><link rel="prefetch" href="/assets/js/75.c01e8f51.js"><link rel="prefetch" href="/assets/js/76.b54b8961.js"><link rel="prefetch" href="/assets/js/77.0dbf7981.js"><link rel="prefetch" href="/assets/js/78.8c38232c.js"><link rel="prefetch" href="/assets/js/79.a335cb85.js"><link rel="prefetch" href="/assets/js/8.951ebc11.js"><link rel="prefetch" href="/assets/js/80.0a6dd385.js"><link rel="prefetch" href="/assets/js/81.db5268d9.js"><link rel="prefetch" href="/assets/js/82.1a8ab807.js"><link rel="prefetch" href="/assets/js/83.cbbf658b.js"><link rel="prefetch" href="/assets/js/84.aba406a3.js"><link rel="prefetch" href="/assets/js/85.b589665d.js"><link rel="prefetch" href="/assets/js/86.2b0e83fb.js"><link rel="prefetch" href="/assets/js/87.cf90a01d.js"><link rel="prefetch" href="/assets/js/88.e9e39801.js"><link rel="prefetch" href="/assets/js/89.71e6b078.js"><link rel="prefetch" href="/assets/js/9.056e913e.js"><link rel="prefetch" href="/assets/js/90.fe7491eb.js"><link rel="prefetch" href="/assets/js/91.de4eaa7b.js"><link rel="prefetch" href="/assets/js/92.d341af22.js"><link rel="prefetch" href="/assets/js/93.c8a05ee5.js"><link rel="prefetch" href="/assets/js/94.8b1be19a.js"><link rel="prefetch" href="/assets/js/95.81b640dd.js"><link rel="prefetch" href="/assets/js/96.b94b6e9f.js"><link rel="prefetch" href="/assets/js/97.64df06d1.js"><link rel="prefetch" href="/assets/js/98.e65e44bd.js"><link rel="prefetch" href="/assets/js/99.e09bc79f.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.52c5fec9.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/img/logo.png" alt="Jast blog" class="logo"> <span class="site-name can-hide">Jast blog</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="大数据" class="dropdown-title"><a href="/bigdata/" class="link-title">大数据</a> <span class="title" style="display:none;">大数据</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/ambari/develop/" class="nav-link">《Ambari自定义开发教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/cdh/" class="nav-link">《CDH教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/clickhouse/" class="nav-link">《ClickHouse教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hdfs/" class="nav-link">《HDFS教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/dolphinscheduler/" class="nav-link">《DolphinScheduler教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hbase/" class="nav-link">《Hbase教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/iceberg/" class="nav-link">《Iceberg教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hive/" class="nav-link">《Hive教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/flume/" class="nav-link">《Flume教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kafka/" class="nav-link">《Kafka教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/impala/" class="nav-link">《Impala教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hue/" class="nav-link">《Hue教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/spark/" class="nav-link">《Spark教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/flink/" class="nav-link">《Flink教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/phoenix/" class="nav-link">《Phoenix教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/elasticsearch/" class="nav-link">《ElasticSearch教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kylin/" class="nav-link">《Kylin教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/storm/" class="nav-link">《Storm教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/yarn/" class="nav-link">《Yarn教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/presto/" class="nav-link">《Presto教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/graph/" class="nav-link">《图数据库教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kerberos/" class="nav-link">《Kerberos教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/maxwell/" class="nav-link">《Maxwell教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/minio/" class="nav-link">《MinIO教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/datax/" class="nav-link">《DataX教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/superset/" class="nav-link">《Superset教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/iotdb/" class="nav-link">《IOTDB教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/bigdata/other/" class="nav-link">《大数据相关》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="人工智能" class="dropdown-title"><a href="/ai/" class="link-title">人工智能</a> <span class="title" style="display:none;">人工智能</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/paddlenlp/" class="nav-link">《PaddleNLP教程》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="运维" class="dropdown-title"><a href="/yunwei/" class="link-title">运维</a> <span class="title" style="display:none;">运维</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/nginx/" class="nav-link">《Nginx教程》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Java" class="dropdown-title"><a href="/java/" class="link-title">Java</a> <span class="title" style="display:none;">Java</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/java/" class="nav-link">《Java技术文档》</a></li><li class="dropdown-item"><!----> <a href="/note/maven/" class="nav-link">《Maven教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/idea/" class="nav-link">《IDEA使用教程》</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="更多" class="dropdown-title"><a href="/more/" class="link-title">更多</a> <span class="title" style="display:none;">更多</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/f2a556/" class="nav-link">学习</a></li><li class="dropdown-item"><!----> <a href="/pages/aea6571b7a8bae86/" class="nav-link">面试</a></li><li class="dropdown-item"><!----> <a href="/pages/2d615df9a36a98ed/" class="nav-link">心情杂货</a></li><li class="dropdown-item"><!----> <a href="/pages/baaa02/" class="nav-link">实用技巧</a></li><li class="dropdown-item"><!----> <a href="/friends/" class="nav-link">友情链接</a></li></ul></div></div><div class="nav-item"><a href="/about/" class="nav-link">关于</a></div><div class="nav-item"><a href="/pages/beb6c0bd8a66cea6/" class="nav-link">收藏</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><div class="blogger"><img src="/img/head.jpeg"> <div class="blogger-info"><h3>Jast-zsh</h3> <span>如果你知道你要去哪里，全世界都会给你让路。</span></div></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="大数据" class="dropdown-title"><a href="/bigdata/" class="link-title">大数据</a> <span class="title" style="display:none;">大数据</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/ambari/develop/" class="nav-link">《Ambari自定义开发教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/cdh/" class="nav-link">《CDH教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/clickhouse/" class="nav-link">《ClickHouse教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hdfs/" class="nav-link">《HDFS教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/dolphinscheduler/" class="nav-link">《DolphinScheduler教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hbase/" class="nav-link">《Hbase教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/iceberg/" class="nav-link">《Iceberg教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hive/" class="nav-link">《Hive教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/flume/" class="nav-link">《Flume教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kafka/" class="nav-link">《Kafka教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/impala/" class="nav-link">《Impala教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/hue/" class="nav-link">《Hue教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/spark/" class="nav-link">《Spark教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/flink/" class="nav-link">《Flink教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/phoenix/" class="nav-link">《Phoenix教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/elasticsearch/" class="nav-link">《ElasticSearch教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kylin/" class="nav-link">《Kylin教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/storm/" class="nav-link">《Storm教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/yarn/" class="nav-link">《Yarn教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/presto/" class="nav-link">《Presto教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/graph/" class="nav-link">《图数据库教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/kerberos/" class="nav-link">《Kerberos教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/maxwell/" class="nav-link">《Maxwell教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/minio/" class="nav-link">《MinIO教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/datax/" class="nav-link">《DataX教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/superset/" class="nav-link">《Superset教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/iotdb/" class="nav-link">《IOTDB教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/bigdata/other/" class="nav-link">《大数据相关》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="人工智能" class="dropdown-title"><a href="/ai/" class="link-title">人工智能</a> <span class="title" style="display:none;">人工智能</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/paddlenlp/" class="nav-link">《PaddleNLP教程》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="运维" class="dropdown-title"><a href="/yunwei/" class="link-title">运维</a> <span class="title" style="display:none;">运维</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/nginx/" class="nav-link">《Nginx教程》笔记</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Java" class="dropdown-title"><a href="/java/" class="link-title">Java</a> <span class="title" style="display:none;">Java</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/note/java/" class="nav-link">《Java技术文档》</a></li><li class="dropdown-item"><!----> <a href="/note/maven/" class="nav-link">《Maven教程》笔记</a></li><li class="dropdown-item"><!----> <a href="/note/idea/" class="nav-link">《IDEA使用教程》</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="更多" class="dropdown-title"><a href="/more/" class="link-title">更多</a> <span class="title" style="display:none;">更多</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/pages/f2a556/" class="nav-link">学习</a></li><li class="dropdown-item"><!----> <a href="/pages/aea6571b7a8bae86/" class="nav-link">面试</a></li><li class="dropdown-item"><!----> <a href="/pages/2d615df9a36a98ed/" class="nav-link">心情杂货</a></li><li class="dropdown-item"><!----> <a href="/pages/baaa02/" class="nav-link">实用技巧</a></li><li class="dropdown-item"><!----> <a href="/friends/" class="nav-link">友情链接</a></li></ul></div></div><div class="nav-item"><a href="/about/" class="nav-link">关于</a></div><div class="nav-item"><a href="/pages/beb6c0bd8a66cea6/" class="nav-link">收藏</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/pages/280b81/" class="sidebar-link">ElasticSearch单机版安装</a></li><li><a href="/pages/d018cb/" class="sidebar-link">ElasticSearch7集群安装</a></li><li><a href="/pages/cfc81c/" class="sidebar-link">ElasticSearch-Head浏览器插件离线安装</a></li><li><a href="/pages/40ab9c/" class="sidebar-link">ElasticSearch-SQL浏览器离线插件安装</a></li><li><a href="/pages/910853/" class="sidebar-link">ElasticSearch快照脚本</a></li><li><a href="/pages/ca92ef/" class="sidebar-link">ELasticSearch监控之Cerebro</a></li><li><a href="/pages/237f1d/" class="sidebar-link">Elasticsearch-SQL</a></li><li><a href="/pages/8327b9/" class="sidebar-link">ElasticSearch优化指南</a></li><li><a href="/pages/9679c9/" class="sidebar-link">ElastiSearch Merger</a></li><li><a href="/pages/3323b9/" aria-current="page" class="active sidebar-link">Elasticsearch Pipeline 详解</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level2"><a href="/pages/3323b9/#ingest-node" class="sidebar-link">Ingest Node</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#简介-ingest-node" class="sidebar-link">简介 Ingest Node</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#简介-pipeline、processors" class="sidebar-link">简介 Pipeline、Processors</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#pipeline-定义" class="sidebar-link">Pipeline 定义</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#简介-simulate-pipeline-api" class="sidebar-link">简介 Simulate Pipeline API</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#访问-pipeline-中的内容" class="sidebar-link">访问 Pipeline 中的内容</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#processors-类型详解" class="sidebar-link">Processors 类型详解</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#append-processor" class="sidebar-link">Append Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#convert-processor" class="sidebar-link">Convert Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#date-processor" class="sidebar-link">Date Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#date-index-name-processor" class="sidebar-link">Date Index Name Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#fail-processor" class="sidebar-link">Fail Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#foreach-processor" class="sidebar-link">Foreach Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#grok-processor" class="sidebar-link">Grok Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#gsub-processor" class="sidebar-link">Gsub Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#join-processor" class="sidebar-link">Join Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#json-processor" class="sidebar-link">JSON Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#kv-processor" class="sidebar-link">KV Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#lowercase-processor" class="sidebar-link">Lowercase Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#remove-processor" class="sidebar-link">Remove Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#rename-processor" class="sidebar-link">Rename Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#script-processor" class="sidebar-link">Script Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#set-processor" class="sidebar-link">Set Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#split-processor" class="sidebar-link">Split Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#sort-processor" class="sidebar-link">Sort Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#trim-processor" class="sidebar-link">Trim Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#uppercase-processor" class="sidebar-link">Uppercase Processor</a></li><li class="sidebar-sub-header level4"><a href="/pages/3323b9/#dot-expander-processor" class="sidebar-link">Dot Expander Processor</a></li><li class="sidebar-sub-header level3"><a href="/pages/3323b9/#自定义-processor" class="sidebar-link">自定义 Processor</a></li></ul></li></ul></li><li><a href="/pages/3f8cc3/" class="sidebar-link">ElasticSearch正确的重启方式</a></li><li><a href="/pages/4c366d/" class="sidebar-link">ElasticSearch查询模板Mustache</a></li><li><a href="/pages/361954/" class="sidebar-link">ElasticSearch索引模板</a></li><li><a href="/pages/71629b/" class="sidebar-link">ElasticSearch集群快照</a></li><li><a href="/pages/efb5cf/" class="sidebar-link">ElasticSearch集群修改密码</a></li><li><a href="/pages/9ba65b/" class="sidebar-link">深入理解ElasticSearch慢查询日志</a></li><li><a href="/pages/f351c4/" class="sidebar-link">ElasticSearch Kibana白金级破解</a></li><li><a href="/pages/199ff1/" class="sidebar-link">ElasticSearch API查看集群状态</a></li><li><a href="/pages/f09267/" class="sidebar-link">ElasticSearch DSL操作</a></li><li><a href="/pages/d91119/" class="sidebar-link">ElasticSearch Script操作数据</a></li><li><a href="/pages/d5f159/" class="sidebar-link">Docker安装ElasticSearchDump备份数据</a></li><li><a href="/pages/a0b214/" class="sidebar-link">ElasticSearch使用Grafana监控服务状态</a></li><li><a href="/pages/cb5427/" class="sidebar-link">ElasticSearch批量修改报错</a></li><li><a href="/pages/20cd5a/" class="sidebar-link">ElasticSearch数据版本冲突</a></li><li><a href="/pages/f92ab1/" class="sidebar-link">ElasticSearch索引_cat统计数量与_count统计数量不一致</a></li><li><a href="/pages/d8b62d/" class="sidebar-link">Kibana使用Nginx反向代理设置提示404</a></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-0c557b5e><div class="articleInfo" data-v-0c557b5e><ul class="breadcrumbs" data-v-0c557b5e><li data-v-0c557b5e><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-0c557b5e></a></li> <li data-v-0c557b5e><a href="/categories/?category=%E3%80%8AElasticSearch%E6%95%99%E7%A8%8B%E3%80%8B%E7%AC%94%E8%AE%B0" title="分类" data-v-0c557b5e>《ElasticSearch教程》笔记</a></li></ul> <div class="info" data-v-0c557b5e><div title="作者" class="author iconfont icon-touxiang" data-v-0c557b5e><a href="https://datamining.blog.csdn.net/" target="_blank" title="作者" class="beLink" data-v-0c557b5e>Jast-zsh</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-0c557b5e><a href="javascript:;" data-v-0c557b5e>2023-03-10</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-title">目录</div> <div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABGpJREFUSA3tVVtoXFUU3fvOI53UlmCaKIFmwEhsE7QK0ipFEdHEKpXaZGrp15SINsXUWvBDpBgQRKi0+KKoFeJHfZA+ED9KKoIU2gYD9UejTW4rVIzm0VSTziPzuNu1z507dibTTjL4U/DAzLn3nL3X2o91ziX6f9wMFdh6Jvbm9nNSV0msViVO6tN1Rm7NMu2OpeJ9lWBUTDxrJbYTS0hInuwciu9eLHlFxCLCZEk3MegsJmZ5K/JD6t7FkFdEvGUo1g7qJoG3MHImqRIn8/nzY1K9UPKKiJmtnUqHVE3Gbuay6vJE/N2FEmuxFjW2nUuE0yQXRRxLiTUAzs36zhZvOXJPdX850EVnnLZkB8prodQoM5JGj7Xk2mvC7JB8tG04Ef5PiXtG0UtxupRQSfTnBoCy554x18yJHI6I+G5Eru4LHmPJZEQsrvPUbMiA8G/WgMK7w7I+ez7++o2ANfbrjvaOl1tFMs+htG3IrZH9/hDX1Pr8Tc0UvH8tcX29KzAgIGcEkINyW5BF9x891hw6VYqgJHEk0huccS7vh3C6gTiODL+26huuBtbct8eZnqLML8PkxGYpuPZBqtqwkSjgc4mB5gbgig5i+y0UDK35LMxXisn9xQtK+nd26gTIHsHe/oblK/b29fUmN/8Y+9jAQrnBp56m1LcDlDp9irKTExSKduXJVWSqdBMA08pEJnEIOB3FPPMybu/oeV8zFeYN3xx576Q6RH+VmplE4ncQV5v+5rzSoyOU7PuEAg8g803PwBJ0CExno/jcMbN8tONYeOmHiuUNryvm3fRUy4tMPVLdAGkUhNWuggGrJcXPv+ouCjz0MKUHz1J2/E8IC9nqTabcxgaBYM0hPhD5Y65FsbxRQKxCQrDjDctW7PUM3HuZunFyifSAqEfuzCp48Il24luWUWZoyJCaPR82jE0+kFA643wRFVni4RYSq3ohJO2pZ7B5dO4xkDWbEpossJPLSrPjYID8rS2UHTlvyNxqIGsg674XJJ7vnh5L7PNwC4hh2sjCI96mzszOTpxLF0T7l88Yz7lAuK6OnL8gXLOnTvpzSb22YG8W7us3jSebFHeeqnXRG1vt+MoUM84LQIBmMsCTAcOauTh0T0l0neQK7m2bLMt2mGxU3HYssS0J2cdv5wljlPsrIuZLAG/2DOZIXgCYT8uMGZN+e2kSirfxZOPCsC0f24nTZzspnVn9VePS1Z5vubmAGGXG8ZFno9Hel0yfA5ZPhF7Dh972BQJ2qCpgH67lmWtBYbvk6sz02wjky2vXyz0XErP/kFB619js1BtwfOV4OPRqOQBjy3Qbk18vigUPPSD5ceHnwck7W9bhAqZdd7SuG7w4/P2F/GaJh8c7e9qgow+Q7cGBo+98WsLkuktFqiZabtXuQTu/Y5ETbR0v7tNSFnvrmu6pjdoan2KjMu8q/Hmj1EfCO2ZGfEIbIXKUlw8qaX9/b2oeSJmFksSeT/Fn0V3nSypChh4Gjh74ybO9aeZ/AN2dwciu2/MhAAAAAElFTkSuQmCC">Elasticsearch Pipeline 详解<!----></h1>  <div class="theme-vdoing-content content__default"><p>[toc]</p> <p><strong>说明</strong></p> <p>本文是建立在有一些 Elasticsearch 基础和了解相关 Pipeline 概念的人</p> <h2 id="ingest-node"><a href="#ingest-node" class="header-anchor">#</a> Ingest Node</h2> <h3 id="简介-ingest-node"><a href="#简介-ingest-node" class="header-anchor">#</a> 简介 Ingest Node</h3> <p>Ingest Node(预处理节点)是 ES 用于功能上命名的一种节点类型,可以通过在 elasticsearch.xml 进行如下配置来标识出集群中的某个节点是否是 Ingest Node.</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>node.ingest: false
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>上述将 node.ingest 设置成 false,则表明当前节点不是 Ingest Node,不具有预处理能力,当然 Elasticsearch 默认所有节点都是 Ingest Node,即集群中所有的节点都具有预处理能力.</p> <p><strong>何为预处理呢?</strong></p> <p>用过 Logstash 对日志进行处理的用户都知道,一般情况下我们并不会直接将原始的日志进行加载到 Elasticsearch 集群,而是对原始日志信息进行(深)加工后保存到 Elasticsearch 集群中.比如 Logstash 支持多种解析器比如 json,kv,date 等,比较经典的是 grok.这里我们不会对 Logstash 的解析器进行详细说明,只是为了描述一个问题,有些时候我们需要 Logstash 来对加载到 Elasticsearch 中的数据进行处理,这个处理,从概念上而言,我们也能称之为&quot;预处理.而这里我们所说的预处理也其实就是类似的概念.</p> <p>可以这么说,在 Elasticsearch 没有提供 IngestNode 这一概念时,我们想对存储在 Elasticsearch 里的数据在存储之前进行加工处理的话,我们只能依赖 Logstash 或自定义插件来完成这一功能,但是在 Elasticsearch 5.x 版本中,官方在内部集成了部分 Logstash 的功能,这就是 Ingest,而具有 Ingest 能力的节点称之为 Ingest Node.</p> <p>请查看 <a href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Filter plugins<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 来了解更多关于 Logstash 解析器的内容.</p> <p>如果要脱离 Logstash 来对在 Elasticsearch 写入文档之前对文档进行加工处理,比如为文档某个字段设置默认值,重命名某个字段,设置通过脚本来完成更加复杂的加工逻辑,我们则必须要了解两个基本概念: Pipeline 和 Processors.</p> <p>参考:  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Ingest Node<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 来了解更多关于上述两个概念.下文只是简单说明两者.</p> <h3 id="简介-pipeline、processors"><a href="#简介-pipeline、processors" class="header-anchor">#</a> 简介 Pipeline、Processors</h3> <p>管道(Pipeline)是众所周知的一个概念,Elasticsearch 引入这一概念,是为了让那些有过工作经验的人来说更直白,更轻松的理解这一概念.本人是主要用 Java 进行开发,这里就以 Pipeline 和 java 中的 Stream 进行类比,两者从功能和概念上很类似,我们经常会对 Stream 中的数据进行处理,比如 map 操作,peek 操作,reduce 操作,count 操作等,这些操作从行为上说,就是对数据的加工,而 Pipeline 也是如此,Pipeline 也会对通过该 Pipeline 的数据(一般来说是文档)进行加工,比如上面说到的,修改文档的某个字段值,修改文档某个字段的类型等等.而 Elasticsearch 对该加工行为进行抽象包装,并称之为 Processors.Elasticsearch 命名了多种类型的 Processors 来规范对文档的操作,比如 set,append,date,join,json,kv 等等.这些不同类型的 Processors,我们会在后文进行说明</p> <h3 id="pipeline-定义"><a href="#pipeline-定义" class="header-anchor">#</a> Pipeline 定义</h3> <p>定义一个 Pipeline 是件很简单的事情,官方给出了参考:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>PUT _ingest/pipeline/my-pipeline-id
+{
+  &quot;description&quot; : &quot;describe pipeline&quot;,
+  &quot;processors&quot; : [
+    {
+      &quot;set&quot; : {
+        &quot;field&quot;: &quot;foo&quot;,
+        &quot;value&quot;: &quot;bar&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>上面的例子,表明通过指定的 URL 请求&quot;_ingest/pipeline&quot;定义了一个 ID 为&quot;my-pipeline-id&quot;的 pipeline,其中请求体中的存在两个必须要的元素:</p> <ul><li>description 描述该 pipeline 是做什么的</li> <li>processors 定义了一系列的 processors,这里只是简单的定义了一个赋值操作,即将字段名为&quot;foo&quot;的字段值都设置为&quot;bar&quot;</li></ul> <p>如果需要了解更多关于 Pipeline 定义的信息,可以参考: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/put-pipeline-api.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Ingest APIs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h3 id="简介-simulate-pipeline-api"><a href="#简介-simulate-pipeline-api" class="header-anchor">#</a> 简介 Simulate Pipeline API</h3> <p>既然 Elasticsearch 提供了预处理的能力,总不能是黑盒处理吧,为了让开发者更好的了解和使用预处理的方式和原理,官方也提供了相关的接口,来让我们对这些预处理操作进行测试,这些接口,官方称之为: Simulate Pipeline API.想要深入了解 pipeline 以及 processors 的使用,我们基本离不开 Simulate Pipeline API 来辅助帮我们完成许多工作.</p> <p>下面是一个比较简单的 Simulate Pipeline API 的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot; : {
+    // pipeline definition here
+  },
+  &quot;docs&quot; : [
+    { &quot;_source&quot;: {/** first document **/} },
+    { &quot;_source&quot;: {/** second document **/} },
+    // ...
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>上面的例子中,在请求 URL 中并没有明确指定使用哪个 pipeline,这种情况下需要我们在请求体中即时定义一个,当然我们也可以在请求 URL 中指定一个 pipeline 的 ID,如下面例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/my-pipeline-id/_simulate
+{
+  &quot;docs&quot; : [
+    { &quot;_source&quot;: {/** first document **/} },
+    { &quot;_source&quot;: {/** second document **/} },
+    // ...
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>这样一来,在请求体中我们定义的&quot;docs&quot;中的内容就能够使用该 pipeline 和该 pipeline 种的 processors,下面是一个比较具体的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot; :
+  {
+    &quot;description&quot;: &quot;_description&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;set&quot; : {
+          &quot;field&quot; : &quot;field2&quot;,
+          &quot;value&quot; : &quot;_value&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;foo&quot;: &quot;bar&quot;
+      }
+    },
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;foo&quot;: &quot;rab&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br></div></div><p>在上面具体的例子中,我们并没有在请求 URL 中指定使用哪个 pipeline,因此我们不得不在请求体中即时定义一个 pipeline 和对应的 processors,例子很简单,只是让通过该 pipeline 的的文档中的字段名称为&quot;field2&quot;的字段值为&quot;_value&quot;,文档我们也指定了,就是&quot;docs&quot;中定义的文档,该请求的响应信息如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+   &quot;docs&quot;: [
+      {
+         &quot;doc&quot;: {
+            &quot;_id&quot;: &quot;id&quot;,
+            &quot;_index&quot;: &quot;index&quot;,
+            &quot;_type&quot;: &quot;type&quot;,
+            &quot;_source&quot;: {
+               &quot;field2&quot;: &quot;_value&quot;,
+               &quot;foo&quot;: &quot;bar&quot;
+            },
+            &quot;_ingest&quot;: {
+               &quot;timestamp&quot;: &quot;2017-05-04T22:30:03.187Z&quot;
+            }
+         }
+      },
+      {
+         &quot;doc&quot;: {
+            &quot;_id&quot;: &quot;id&quot;,
+            &quot;_index&quot;: &quot;index&quot;,
+            &quot;_type&quot;: &quot;type&quot;,
+            &quot;_source&quot;: {
+               &quot;field2&quot;: &quot;_value&quot;,
+               &quot;foo&quot;: &quot;rab&quot;
+            },
+            &quot;_ingest&quot;: {
+               &quot;timestamp&quot;: &quot;2017-05-04T22:30:03.188Z&quot;
+            }
+         }
+      }
+   ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br></div></div><p>从具体的响应结果中看到,在文档通过 pipeline 时(或理解为被 pipeline 中的 processors 加工后),新的文档与原有的文档产生了差异,这些差异体现为:</p> <ol><li>文档都新增了 field2 字段,这点我们可以通过对比响应前后的定义在&quot;docs&quot;中文档的_source 内容中看出</li> <li>额外增加了一些临时(官方称之为瞬态)的字段,比如 timestamp,他们都在_ingest 节点下,(这些)字段都是临时与源文档存在一起,在被 pipeline 中的 processors 加工后后返回给对应的批量操作或索引操作之后,这些信息就不会携带返回.</li></ol> <h3 id="访问-pipeline-中的内容"><a href="#访问-pipeline-中的内容" class="header-anchor">#</a> 访问 Pipeline 中的内容</h3> <p>如果我们只是定义一个 Pipeline 而不能访问该 Pipeline 的上下文信息,那么设计 Pipeline 就显然是多此一举.与 logstash 不同的时候,logstash 环境与 Elasticsearch 环境是隔离的,两者无法形成上下文环境,而 Pipeline 则不同,天然的集成在 Elasticsearch 中,从而很好的与其形成上线文环境,这个环境让 Pipeline 能够更充分的利用起来,比如与 Pipeline 能够形成最直接的上线文关系的是文档信息,由此可见,我们可以在 Pipeline(应该是 processors 中)能够直接访问通过 pipeline 的文档信息,如文档的字段,元数据信息.</p> <p>下面的例子说明了我们如何在 processors 中访问这些上下文信息.</p> <p><strong>访问源文档字段</strong></p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;set&quot;: {
+    &quot;field&quot;: &quot;my_field&quot;
+    &quot;value&quot;: 582.1
+  }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>这个例子直接引用了通过该 Pipeline 内的文档字为&quot;my_field&quot;的字段,并将所有文档该字段的值设置为 582.1.</p> <p>或者我们也可以通过_source 字段来访问源文档的字段,如下</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;set&quot;: {
+    &quot;field&quot;: &quot;_source.my_field&quot;
+    &quot;value&quot;: 582.1
+  }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p><strong>访问文档的元数据字段</strong></p> <p>每个文档都会有一些元数据字段信息(metadata filed),比如_id，_index,_type 等,我们在 processors 中也可以直接访问这些信息的,比如下面的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;set&quot;: {
+    &quot;field&quot;: &quot;_id&quot;
+    &quot;value&quot;: &quot;1&quot;
+  }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>直接访问文档的_id 字段,并设置该值为 1</p> <p><strong>访问瞬态元字段(ingest metadata field)</strong></p> <p>这个地方并没有直接翻译官方名称,因为不好理解,我使用了我自己的理解意图去翻译该名称.其实含义是一致的,官方称之为ingest metadata field,翻译过来且为&quot;摄取元数据字段?&quot;(请高人翻译,我实在无法很好的翻译出来),从官方对该词的释义中可以理解出来,这些字段是临时保存的,在这些文档被处理完成之后返回给对应的批量请求和索引请求的时候,这些字段不会一并返回,因此这里称之为&quot;瞬态元字段&quot;，下面是一个如何访问这些字段的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;set&quot;: {
+    &quot;field&quot;: &quot;received&quot;
+    &quot;value&quot;: &quot;{ {_ingest.timestamp}}&quot;
+  }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>该例子会在文档中临时加入一个名称为&quot;received&quot;的字段,值为瞬态元字段中的 timestamp,以{ {_ingest.timestamp}}的格式来进行访问,看到{ {}}是不是有种很熟悉的感觉,因为只有在涉及上下文的环境中一般才会使用这种表达式.</p> <h3 id="processors-类型详解"><a href="#processors-类型详解" class="header-anchor">#</a> Processors 类型详解</h3> <ul><li>Append Processor 追加处理器</li> <li>Convert Processor 转换处理器</li> <li>Date Processor 日期转换器</li> <li>Date Index Name Processor 日期索引名称处理器</li> <li>Fail Processor 失败处理器</li> <li>Foreach Processor 循环处理器</li> <li>Grok Processor Grok 处理器</li> <li>Gsub Processor</li> <li>Join Processor</li> <li>JSON Processor</li> <li>KV Processor</li> <li>Lowercase Processor</li> <li>Remove Processor</li> <li>Rename Processor</li> <li>Script Processor</li> <li>Split Processor</li> <li>Sort Processor</li> <li>Trim Processor</li> <li>Uppercase Processor</li> <li>Dot Expander Processor</li></ul> <h4 id="append-processor"><a href="#append-processor" class="header-anchor">#</a> Append Processor</h4> <p>顾名思义,追加处理器.就是当我们加载原始文档到 Elasticsearch 的时候,某些字段的描述信息可能需要我们定制性的增加一些额外说明.</p> <p>使用方法如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;append&quot;: {
+    &quot;field&quot;: &quot;field1&quot;,
+    &quot;value&quot;: [&quot;item2&quot;, &quot;item3&quot;, &quot;item4&quot;]
+  }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>比如我们需要从第三方新导入一批商品,因为某种原因这批新商品必须要打上一个&quot;家居&quot;的标签来表示该批商品是&quot;家居分类&quot;,当然一个商品也可能不止一个分类,这个时候要求我们在导入这批文档数据的时候,需要在原有的标签字段中新增一个&quot;家居&quot;标签,这个时候我们就通过追加处理器来完成.</p> <p>下面的例子我们通过 Simulate Pipeline API 来帮助我们完成</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;新增一个家居标签&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;append&quot;: {
+          &quot;field&quot;: &quot;tag&quot;,
+          &quot;value&quot;: [
+            &quot;家居&quot;
+          ]
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000001&quot;,
+        &quot;tag&quot;: &quot;衣柜&quot;
+      }
+    },
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000002&quot;,
+        &quot;tag&quot;: &quot;沙发&quot;
+      }
+    },
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000003&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br></div></div><p>返回结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000001&quot;,
+          &quot;tag&quot;: [
+            &quot;衣柜&quot;,
+            &quot;家居&quot;
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-24T13:19:55.555Z&quot;
+        }
+      }
+    },
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000002&quot;,
+          &quot;tag&quot;: [
+            &quot;沙发&quot;,
+            &quot;家居&quot;
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-24T13:19:55.555Z&quot;
+        }
+      }
+    },
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000003&quot;,
+          &quot;tag&quot;: [
+            &quot;家居&quot;
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-24T13:19:55.555Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br></div></div><p>我们可以看到,通过该处理器处理之后,新的文档中的 tag 字段都新增了一个&quot;家居&quot;标签,同时如果原文档没有该字段,则会新建该字段.</p> <h4 id="convert-processor"><a href="#convert-processor" class="header-anchor">#</a> Convert Processor</h4> <p>该类型的 Processor 是用于在写入某些文档之前对该文档的字段类型进行转换,比如文档中有个字符串类型的&quot;价格&quot;字段,我们希望将其转换成 float 类型,则我们可以使用该处理器来完成这项操作,实现如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;修改字符串类型为double类型&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;convert&quot;: {
+         &quot;field&quot;: &quot;price&quot;,
+         &quot;type&quot;: &quot;float&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000001&quot;,
+        &quot;tag&quot;: &quot;衣柜&quot;,
+        &quot;price&quot;:&quot;999.8&quot;
+      }
+    },
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000002&quot;,
+        &quot;tag&quot;: &quot;沙发&quot;,
+        &quot;price&quot;:&quot;899.8&quot;
+      }
+    },
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000003&quot;,
+        &quot;price&quot;:&quot;799.8&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br></div></div><p>测试结果如下：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000001&quot;,
+          &quot;tag&quot;: &quot;衣柜&quot;,
+          &quot;price&quot;: 999.8
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-26T10:56:47.663Z&quot;
+        }
+      }
+    },
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000002&quot;,
+          &quot;tag&quot;: &quot;沙发&quot;,
+          &quot;price&quot;: 899.8
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-26T10:56:47.664Z&quot;
+        }
+      }
+    },
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;code&quot;: &quot;000003&quot;,
+          &quot;price&quot;: 799.8
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-26T10:56:47.664Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br></div></div><p>可以看到,新的文档,price 字段将不再是字符串类型了,而是 float 类型.</p> <p>使用 Convert Processor 需要注意的是,目前官方支持转换的类型有如下几个:integer, float, string, boolean, and auto。</p> <p>关于更多该处理器的使用说明,请参考: <a href="https://link.ld246.com/forward?goto=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2Fcurrent%2Fconvert-processor.html" target="_blank" rel="noopener noreferrer">https://www.elastic.co/guide/en/elasticsearch/reference/current/convert-processor.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="date-processor"><a href="#date-processor" class="header-anchor">#</a> Date Processor</h4> <p>日期处理器,顾名思义,就是将原文档中的某个日期字段转换成一个 Elasticsearch 识别的时间戳字段(一般默认为@timestamp),该时间戳字段将会新增到原文档中.(目前发现该功能比较鸡肋,因为转换后的时间格式只能是 ISO 8601 时间格式的,并不能转换成其他格式,因此很少用)</p> <p>下面是一个使用 Date Processor 的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;转换成指定格式的日期格式字段&quot;,
+    &quot;processors&quot;: [
+      {
+      &quot;date&quot;: {
+        &quot;field&quot;: &quot;date&quot;,
+        &quot;formats&quot;: [&quot;UNIX&quot;],
+        &quot;timezone&quot;: &quot;Asia/Shanghai&quot;
+      }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;code&quot;:&quot;000001&quot;,
+        &quot;tag&quot;: &quot;衣柜&quot;,
+        &quot;price&quot;:&quot;999.8&quot;,
+        &quot;date&quot;:&quot;1511696379&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br></div></div><p>就是将原有的字符串表示的日期格式进行格式转换(最终转换成的是 ISO 时间格式),结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;date&quot;: &quot;1511696379&quot;,
+          &quot;code&quot;: &quot;000001&quot;,
+          &quot;@timestamp&quot;: &quot;2017-11-26T19:39:39.000+08:00&quot;,
+          &quot;price&quot;: &quot;999.8&quot;,
+          &quot;tag&quot;: &quot;衣柜&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-26T12:01:16.787Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><p>我们可以看到多了一个默认字段@timestamp,该字段名称可以通过 target_field 字段来指定该字段名称.</p> <p>为什么说只能生成 ISO 格式的时间呢？这方面的资料官方没有提供,只能自己去源码中看,这里</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>public void execute(IngestDocument ingestDocument) {
+        String value = ingestDocument.getFieldValue(field, String.class);
+
+        DateTime dateTime = null;
+        Exception lastException = null;
+        for (Function&lt;String, DateTime&gt; dateParser : dateParsers) {
+            try {
+                dateTime = dateParser.apply(value);
+            } catch (Exception e) {
+                //try the next parser and keep track of the exceptions
+                lastException = ExceptionsHelper.useOrSuppress(lastException, e);
+            }
+        }
+
+        if (dateTime == null) {
+            throw new IllegalArgumentException(&quot;unable to parse date [&quot; + value + &quot;]&quot;, lastException);
+        }
+
+        ingestDocument.setFieldValue(targetField, ISODateTimeFormat.dateTime().print(dateTime));
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>其中最后一行,在设置字段的时候,发现源码中已经写死为 ISODateTimeFormat.个人感觉官方应该会自定义 pattern.</p> <h4 id="date-index-name-processor"><a href="#date-index-name-processor" class="header-anchor">#</a> Date Index Name Processor</h4> <p>Date Index Name Processor 算得上是一个比较强大的处理了,它的目的是让通过该处理器的文档能够分配到符合指定时间格式的索引中,前提是按照官方提供的说明来进行使用:</p> <p>我们先创建一个该类型的 pipeline,如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>curl -XPUT 'localhost:9200/_ingest/pipeline/monthlyindex?pretty' -H 'Content-Type: application/json' -d'
+{
+  &quot;description&quot;: &quot;monthly date-time index naming&quot;,
+  &quot;processors&quot; : [
+    {
+      &quot;date_index_name&quot; : {
+        &quot;field&quot; : &quot;date1&quot;,
+        &quot;index_name_prefix&quot; : &quot;myindex-&quot;,
+        &quot;date_rounding&quot; : &quot;M&quot;
+      }
+    }
+  ]
+}
+'
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><p>我们再创建一个文档,如下(该文档会使用该 pipeline)</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>curl -XPUT 'localhost:9200/myindex/type/1?pipeline=monthlyindex&amp;pretty' -H 'Content-Type: application/json' -d'
+{
+  &quot;date1&quot; : &quot;2016-04-25T12:02:01.789Z&quot;
+}
+'
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>结果如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;_index&quot; : &quot;myindex-2016-04-01&quot;,
+  &quot;_type&quot; : &quot;type&quot;,
+  &quot;_id&quot; : &quot;1&quot;,
+  &quot;_version&quot; : 1,
+  &quot;result&quot; : &quot;created&quot;,
+  &quot;_shards&quot; : {
+    &quot;total&quot; : 2,
+    &quot;successful&quot; : 1,
+    &quot;failed&quot; : 0
+  },
+  &quot;created&quot; : true
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><p>以上请求将不会将此 document（文档）放入 myindex 索引，而是放入到 myindex-2016-04-01 索引中.</p> <p>这就是日期索引名称处理器(Date Index Name Processor)强大的地方,我们写入的文档可以根据其中的某个日期格式的字段来指定该文档将写入哪个索引中,该功能配上 template,能够实现很强大的日志收集功能,比如按月按天来将日志写入 Elasticsearch.</p> <p>如果想了解 Date Index Name Processor 的使用,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/date-index-name-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Date Index Name Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="fail-processor"><a href="#fail-processor" class="header-anchor">#</a> Fail Processor</h4> <p>该处理器比较简单,就是当文档通过该 pipeline 的时候,一旦出现异常,该 pipeline 指定的错误信息就会返回给请求者.</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;monthly date-time index naming&quot;,
+  &quot;processors&quot; : [
+    {
+     &quot;fail&quot;: {
+       &quot;message&quot;: &quot;an error message&quot;
+     }
+    }
+  ]
+  }, 
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;myindex&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;id&quot;:&quot;1&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>结果如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;error&quot;: {
+        &quot;root_cause&quot;: [
+          {
+            &quot;type&quot;: &quot;exception&quot;,
+            &quot;reason&quot;: &quot;java.lang.IllegalArgumentException: org.elasticsearch.ingest.common.FailProcessorException: an error message&quot;,
+            &quot;header&quot;: {
+              &quot;processor_type&quot;: &quot;fail&quot;
+            }
+          }
+        ],
+        &quot;type&quot;: &quot;exception&quot;,
+        &quot;reason&quot;: &quot;java.lang.IllegalArgumentException: org.elasticsearch.ingest.common.FailProcessorException: an error message&quot;,
+        &quot;caused_by&quot;: {
+          &quot;type&quot;: &quot;illegal_argument_exception&quot;,
+          &quot;reason&quot;: &quot;org.elasticsearch.ingest.common.FailProcessorException: an error message&quot;,
+          &quot;caused_by&quot;: {
+            &quot;type&quot;: &quot;fail_processor_exception&quot;,
+            &quot;reason&quot;: &quot;an error message&quot;
+          }
+        },
+        &quot;header&quot;: {
+          &quot;processor_type&quot;: &quot;fail&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br></div></div><h4 id="foreach-processor"><a href="#foreach-processor" class="header-anchor">#</a> Foreach Processor</h4> <p>一个 Foreach Processor 是用来处理一些数组字段,数组内的每个元素都会使用到一个相同的处理器,比如</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;foreach processor&quot;,
+  &quot;processors&quot; : [
+    {
+      &quot;foreach&quot;: {
+        &quot;field&quot;: &quot;values&quot;,
+        &quot;processor&quot;: {
+          &quot;uppercase&quot;: {
+            &quot;field&quot;: &quot;_ingest._value&quot;
+          }
+        }
+      }
+    }
+  ]
+  }, 
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;id&quot;:&quot;1&quot;,
+        &quot;values&quot;:[&quot;hello&quot;,&quot;world&quot;,&quot;felayman&quot;]
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br></div></div><p>上面的例子中,文档中的 values 字段是一个数组类型的字段,其中每个元素都需要使用 Foreach Processor 中的一个共同的 uppercase Processor 来保证该字段中的每个元素都能执行相同的操作</p> <p>结果如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;id&quot;: &quot;1&quot;,
+          &quot;values&quot;: [
+            &quot;HELLO&quot;,
+            &quot;WORLD&quot;,
+            &quot;FELAYMAN&quot;
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;_value&quot;: null,
+          &quot;timestamp&quot;: &quot;2017-11-27T08:55:17.496Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>关于每个 Processor,深入下去都有许多需要说明的,这里没有深入,只是让大家了解其基本使用。</p> <p>详情请参考: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/foreach-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Foreach Processore<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="grok-processor"><a href="#grok-processor" class="header-anchor">#</a> Grok Processor</h4> <p>Grok Processor 可以算的上是一个比较实用的处理器了,会经常使用到日志格式切割上,有用过 logstash 的用户应该都知道 Grok 的强大.这里并不会涉及到到 Grok 详细的语法知识.这里我们只是略过的说明 Elasticsearch 中的ingest node 中的 pipeline 也能提供 logstash 中的 Grok 的功能.</p> <p>如下的使用例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;grok processor&quot;,
+  &quot;processors&quot; : [
+    {
+      &quot;grok&quot;: {
+        &quot;field&quot;: &quot;message&quot;,
+        &quot;patterns&quot;: [&quot;%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}&quot;]
+      }
+    }
+  ]
+  }, 
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+       &quot;message&quot;: &quot;55.3.244.1 GET /index.html 15824 0.043&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>上面例子中的日志可能是 nginx 的日志,格式为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>55.3.244.1 GET /index.html 15824 0.043
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>对应的 Grok 语法为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>因此该文本格式的日志信息在经过 Grok Processor 之后,能够解析成一个标准文档的格式,该文档可以使用 Elasticsearch 提供的检索和聚合功能充分使用到,而原始的文本格式的日志信息则无法做到这一点</p> <p>返回结果如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;duration&quot;: &quot;0.043&quot;,
+          &quot;request&quot;: &quot;/index.html&quot;,
+          &quot;method&quot;: &quot;GET&quot;,
+          &quot;bytes&quot;: &quot;15824&quot;,
+          &quot;client&quot;: &quot;55.3.244.1&quot;,
+          &quot;message&quot;: &quot;55.3.244.1 GET /index.html 15824 0.043&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:07:40.782Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>可以看到,对应的切割点都转换成文档中的一个字段.</p> <p>关于 Grok Processor 的详细介绍,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/grok-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Grok Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="gsub-processor"><a href="#gsub-processor" class="header-anchor">#</a> Gsub Processor</h4> <p>Gsub Processor 能够解决一些字符串中才特有的问题,比如我想把字符串格式的日期格式如&quot;yyyy-MM-dd HH:mm:ss&quot;转换成&quot;yyyy/MM/dd HH:mm:ss&quot;的格式,我们可以借助于 Gsub Processor 来解决,而 Gsub Processor 也正是利用正则来完成这一任务的.</p> <p>如:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;gsub processor&quot;,
+  &quot;processors&quot; : [
+    {
+      &quot;gsub&quot;: {
+        &quot;field&quot;: &quot;message&quot;,
+        &quot;pattern&quot;: &quot;-&quot;,
+        &quot;replacement&quot;: &quot;/&quot;
+      }
+    }
+  ]
+  }, 
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+       &quot;message&quot;: &quot;2017-11-27 00:00:00&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br></div></div><p>返回结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;2017/11/27 00:00:00&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:15:05.502Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>就将 message 字段中的日期格式修改成我们想要的格式了.</p> <p>更多关于 Gsub Processor 的介绍,请参考 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/gsub-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Gsub Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="join-processor"><a href="#join-processor" class="header-anchor">#</a> Join Processor</h4> <p>Join Processor 能够将原本一个数组类型的字段值,分解成以指定分隔符分割的一个字符串.</p> <p>如下例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;join processor&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;join&quot;: {
+          &quot;field&quot;: &quot;message&quot;,
+          &quot;separator&quot;: &quot;、、、、&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;: [&quot;hello&quot;,&quot;world&quot;,&quot;felayman&quot;]
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;hello、、、、world、、、、felayman&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:25:41.260Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>可以看到,原文档中数组格式的的 message 字段,经过 Join Processor 处理后,变成了字符串类型的字段&quot;hello、、、、world、、、、felayman&quot;.</p> <p>更多关于 Join Processor 的内容,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/join-processor.html?utm_source=ld246.coml" target="_blank" rel="noopener noreferrer">Join Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="json-processor"><a href="#json-processor" class="header-anchor">#</a> JSON Processor</h4> <p>JSON Processor 也是用来处理字符串类型的字段,可以将那些符合 JSON 格式(或被 JSON 串化)的文本,在经过 JSON Processor 加工之后,解析成对应的 JSON 格式,如下例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;join processor&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;json&quot;: {
+          &quot;field&quot;: &quot;message&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;{\&quot;foo\&quot;: 2000}&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: {
+            &quot;foo&quot;: 2000
+          }
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:30:28.546Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br></div></div><p>可以看到,原本是字符串格式的字段 message,在处理之后变成了一个标准的 JSON 格式.</p> <p>更多关于 JSON Processor 的内容,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">JSON Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="kv-processor"><a href="#kv-processor" class="header-anchor">#</a> KV Processor</h4> <p>KV Processor 用来 K,V 字符串格式的处理器,比如 K=V, K:V,K-&gt;V 等格式的解析.</p> <p>如下例:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;kv processor&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;kv&quot;: {
+          &quot;field&quot;: &quot;message&quot;,
+          &quot;field_split&quot;:&quot; &quot;,
+          &quot;value_split&quot;: &quot;:&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;ip:127.0.0.1&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br></div></div><p>其中字段 message 的原始值为&quot;&quot;ip:127.0.0.1&quot;&quot;,我们想将该格式的内容新增一个独立的字段如 ip:127.0.0.1 这种格式.</p> <p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;ip:107.0.0.1&quot;,
+          &quot;ip&quot;: &quot;107.0.0.1&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:46:48.715Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>更多关于 KV Processor 的内容,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/kv-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">KV Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="lowercase-processor"><a href="#lowercase-processor" class="header-anchor">#</a> Lowercase Processor</h4> <p>Lowercase Processor 也是一个专用于字符串类型的字段处理器,顾名思义,是将字符串都转换成小写格式.</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;lowercase processor&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;lowercase&quot;: {
+          &quot;field&quot;: &quot;message&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;HELLO,WORLD,FELAYMAN.&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;hello,world,felayman.&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:49:58.564Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>可以看到原文档中的 message 字段的值,在使用 Lowercase Processor 之后,都变成大写的了.</p> <p>更多关于 Lowercase Processor 的内容,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/kv-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Lowercase Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="remove-processor"><a href="#remove-processor" class="header-anchor">#</a> Remove Processor</h4> <p>Remove Processor 是用来处理在写入文档之前,删除原文档中的某些字段值的.</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;remove processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;remove&quot;: {
+         &quot;field&quot;: &quot;extra_field&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;extra_field&quot;:&quot;extra_field&quot;,
+        &quot;message&quot;:&quot; hello,  felayman.&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>在经过 Remove Processor 处理后,extra_field 字段将不存在了.</p> <p>结果为下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot; hello,  felayman.&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:58:46.038Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><h4 id="rename-processor"><a href="#rename-processor" class="header-anchor">#</a> Rename Processor</h4> <p>Rename Processor 是用来处理在文档写入 Elasticsearch 之前修改某个文档的字段的名称</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;remove processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;rename&quot;: {
+         &quot;field&quot;: &quot;old_name&quot;,
+         &quot;target_field&quot;: &quot;new_name&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+       &quot;old_name&quot;:&quot;old_name&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>会发现原文档的字段 old_name 被重新命名为 new_name 字段</p> <p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;new_name&quot;: &quot;old_name&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:00:48.694Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><h4 id="script-processor"><a href="#script-processor" class="header-anchor">#</a> Script Processor</h4> <p>Script Processor 算的上是最强大的处理了,因为能充分利用 Elasticsearch 提供的脚本能力.</p> <p>这里也不会详细介绍 Elasticsearch 中的脚本如何使用,有关信息,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Script<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>我么看下在 Script Processor 中使用脚本的例子:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;script processor&quot;,
+    &quot;processors&quot;: [
+      {
+        &quot;script&quot;: {
+          &quot;lang&quot;: &quot;painless&quot;,
+          &quot;inline&quot;: &quot;ctx.viewCount = (ctx.viewCount) *10&quot;
+        }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;viewCount&quot;: 100
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>这里我们通过脚本让原文档中的 viewCount 字段的值扩大十倍,结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;viewCount&quot;: 1000
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:07:56.112Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><h4 id="set-processor"><a href="#set-processor" class="header-anchor">#</a> Set Processor</h4> <p>Set Processor 作用于两种不同情况:</p> <ol><li>指定字段存在时,修改指定字段的值</li> <li>指定字段不存在时,新增该字段并设置该字段的值</li></ol> <p>例子如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;set processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;set&quot;: {
+         &quot;field&quot;: &quot;category&quot;,
+         &quot;value&quot;: &quot;家居&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;id&quot;:&quot;0001&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>这里我们为每个使用 Set Processor 的文档新增一个分类&quot;家居&quot;</p> <p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;id&quot;: &quot;0001&quot;,
+          &quot;category&quot;: &quot;家居&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:12:05.306Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><h4 id="split-processor"><a href="#split-processor" class="header-anchor">#</a> Split Processor</h4> <p>Split Processor 用于将一个以指定分隔分开的字符串转换成一个数组类型的字段</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code> POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;Split processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;split&quot;: {
+         &quot;field&quot;: &quot;message&quot;,
+         &quot;separator&quot;: &quot;-&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;hello-world&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>其中原文档的 message 字段值将会有&quot;hello-world&quot;转换为[&quot;hello&quot;,&quot;world&quot;]</p> <p>结果为：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: [
+            &quot;hell&quot;,
+            &quot;world&quot;
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:13:35.982Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><h4 id="sort-processor"><a href="#sort-processor" class="header-anchor">#</a> Sort Processor</h4> <p>Sort Processor 用于处理数组类型的字段,可以将存储在原文档中某个数组类型的字段中的元素按照升序或降序来对原元素进行排序</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;sort processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;sort&quot;: {
+         &quot;field&quot;: &quot;category&quot;,
+         &quot;order&quot;: &quot;asc&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;category&quot;:[2,3,4,1]
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>我们使用升序来修改原文档 category 字段的值的存储排序</p> <p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;category&quot;: [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:16:16.409Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><h4 id="trim-processor"><a href="#trim-processor" class="header-anchor">#</a> Trim Processor</h4> <p>哎,Elasticsearch 开发者真的没谁了,基本上能把 String 类中的方法都拿过来搬一套过来使用.</p> <p>Trim Processor 是专门用于处理字符串两端的空格问题,如下</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;trim processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;trim&quot;: {
+         &quot;field&quot;: &quot;message&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot; hello,  felayman.&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>请注意,是去除字符串两端的空格.</p> <p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;hello,  felayman.&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:56:17.946Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><h4 id="uppercase-processor"><a href="#uppercase-processor" class="header-anchor">#</a> Uppercase Processor</h4> <p>该处理器类似于 Lowercase Processor,将字符串文本统一转换成大写.</p> <p>如下:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>POST _ingest/pipeline/_simulate
+{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;uppercase processor&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;uppercase&quot;: {
+         &quot;field&quot;: &quot;message&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;hello,world,felayman.&quot;
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+          &quot;message&quot;: &quot;HELLO,WORLD,FELAYMAN.&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T09:53:33.672Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>更多关于 Uppercase Processor 的内容,请参考:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/uppercase-processor.html?utm_source=ld246.com" target="_blank" rel="noopener noreferrer">Uppercase Processor<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h4 id="dot-expander-processor"><a href="#dot-expander-processor" class="header-anchor">#</a> Dot Expander Processor</h4> <h3 id="自定义-processor"><a href="#自定义-processor" class="header-anchor">#</a> 自定义 Processor</h3> <p>如果发现官方提供的 Processor 不满足我们的加工逻辑怎么办？不用担心,官方提供了很好的插件机制来帮助我们对其进行扩展,想实现一个自定义的 Processor 需要两个过程:</p> <ul><li>实现 IngestPlugin 接口,并实现 IngestPlugin 中的 getProcessors 方法</li> <li>实现自定义的 Processor</li></ul> <p>下面我们给一个具体的例子,我们将任何传入的一个字段的值都变成大写(最简化模型,不指定字段,使用_ingest/pipeline/_simulate api 模拟该操作)</p> <p>新建一个项目,名称为 elasticsearch-help,新建 FirstUpperPlugin 类,如下:</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">package</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>help<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>help<span class="token punctuation">.</span>processor<span class="token punctuation">.</span>FirstUpperProcessor<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>ingest<span class="token punctuation">.</span>Processor<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>IngestPlugin<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>Plugin<span class="token punctuation">;</span>
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Collections<span class="token punctuation">;</span>
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Map<span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * @auhthor lei.fang@shijue.me
+ * @since . 2017-11-26
+ */</span>
+public class FirstUpperPlugin extends Plugin implements IngestPlugin<span class="token punctuation">{</span>
+
+    @Override
+    public Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Processor<span class="token punctuation">.</span>Factory<span class="token operator">&gt;</span> <span class="token function">getProcessors</span><span class="token punctuation">(</span>Processor<span class="token punctuation">.</span>Parameters parameters<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonMap</span><span class="token punctuation">(</span>FirstUpperProcessor<span class="token punctuation">.</span>TYPE<span class="token punctuation">,</span><span class="token builtin">new</span> FirstUpperProcessor<span class="token punctuation">.</span><span class="token function">Factory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br></div></div><p>其中我们实现了 getProcessors 方法,该方法主要用来提供我们自定义的额 Processor,其中 FirstUpperProcessor 源码如下:</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">package</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>help<span class="token punctuation">.</span>processor<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>ingest<span class="token punctuation">.</span>AbstractProcessor<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>ingest<span class="token punctuation">.</span>ConfigurationUtils<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>ingest<span class="token punctuation">.</span>IngestDocument<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>elasticsearch<span class="token punctuation">.</span>ingest<span class="token punctuation">.</span>Processor<span class="token punctuation">;</span>
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Map<span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * @auhthor lei.fang@shijue.me
+ * @since . 2017-11-26
+ */</span>
+public class FirstUpperProcessor extends AbstractProcessor <span class="token punctuation">{</span>
+
+    public static final String TYPE <span class="token operator">=</span> <span class="token string">&quot;firstUpper&quot;</span><span class="token punctuation">;</span>
+
+    private final String field<span class="token punctuation">;</span>
+
+    public <span class="token function">FirstUpperProcessor</span><span class="token punctuation">(</span>String tag<span class="token punctuation">,</span>String field<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">super</span><span class="token punctuation">(</span>tag<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        this<span class="token punctuation">.</span>field <span class="token operator">=</span> field<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    @Override
+    public void <span class="token function">execute</span><span class="token punctuation">(</span>IngestDocument ingestDocument<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+        ingestDocument<span class="token punctuation">.</span><span class="token function">setFieldValue</span><span class="token punctuation">(</span>field<span class="token punctuation">,</span>field<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    @Override
+    public String <span class="token function">getType</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> TYPE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    public static final class Factory implements Processor<span class="token punctuation">.</span>Factory <span class="token punctuation">{</span>
+
+        public FirstUpperProcessor <span class="token function">create</span><span class="token punctuation">(</span>Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Processor<span class="token punctuation">.</span>Factory<span class="token operator">&gt;</span> registry<span class="token punctuation">,</span> String processorTag<span class="token punctuation">,</span>
+                                    Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Object<span class="token operator">&gt;</span> config<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+            String field <span class="token operator">=</span> ConfigurationUtils<span class="token punctuation">.</span><span class="token function">readStringProperty</span><span class="token punctuation">(</span>TYPE<span class="token punctuation">,</span> processorTag<span class="token punctuation">,</span> config<span class="token punctuation">,</span> <span class="token string">&quot;field&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token builtin">new</span> <span class="token function">FirstUpperProcessor</span><span class="token punctuation">(</span>processorTag<span class="token punctuation">,</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div></div><p>可以看到,其中核心的方法为 execute,主要是将传入的字段的值转换成大写,这里只是调用了简单的 toUpperCase()方法.</p> <p>我们使用_ingest/pipeline/_simulate api 来进行测试:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>curl -XGET 'http://localhost:9200/_ingest/pipeline/_simulate?pretty ' -d '{
+  &quot;pipeline&quot;: {
+    &quot;description&quot;: &quot;字符串首字母转换成大写&quot;,
+    &quot;processors&quot;: [
+      {
+       &quot;firstUpper&quot;:{
+         &quot;field&quot;:&quot;message&quot;
+       }
+      }
+    ]
+  },
+  &quot;docs&quot;: [
+    {
+      &quot;_index&quot;: &quot;index&quot;,
+      &quot;_type&quot;: &quot;type&quot;,
+      &quot;_id&quot;: &quot;id&quot;,
+      &quot;_source&quot;: {
+        &quot;message&quot;:&quot;hello,world.&quot;
+      }
+    }
+  ]
+}'
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>结果为:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>{
+  &quot;docs&quot;: [
+    {
+      &quot;doc&quot;: {
+        &quot;_index&quot;: &quot;index&quot;,
+        &quot;_type&quot;: &quot;type&quot;,
+        &quot;_id&quot;: &quot;id&quot;,
+        &quot;_source&quot;: {
+            &quot;message&quot;:&quot;Hello,world.&quot;
+        },
+        &quot;_ingest&quot;: {
+          &quot;timestamp&quot;: &quot;2017-11-27T10:16:16.409Z&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>可以看到,自定义的 Ingest node 插件成功了.</p> <p>完结.</p></div></div>  <div class="page-edit"><!----> <!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2023/03/10, 22:10:55</span></div></div> <div class="page-nav-wapper"><div class="page-nav-centre-wrap"><a href="/pages/9679c9/" class="page-nav-centre page-nav-centre-prev"><div class="tooltip">ElastiSearch Merger</div></a> <a href="/pages/3f8cc3/" class="page-nav-centre page-nav-centre-next"><div class="tooltip">ElasticSearch正确的重启方式</div></a></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/pages/9679c9/" class="prev">ElastiSearch Merger</a></span> <span class="next"><a href="/pages/3f8cc3/">ElasticSearch正确的重启方式</a>→
+      </span></p></div></div></div> <div class="article-list"><div class="article-title"><a href="/archives/" class="iconfont icon-bi">最近更新</a></div> <div class="article-wrapper"><dl><dd>01</dd> <dt><a href="/pages/71a69e/"><div>
+            users xml配置文件详解
+            <!----></div></a> <span class="date">07-12</span></dt></dl><dl><dd>02</dd> <dt><a href="/pages/473fcd/"><div>
+            Protobuf详细介绍
+            <!----></div></a> <span class="date">07-12</span></dt></dl><dl><dd>03</dd> <dt><a href="/pages/03084b/"><div>
+            Java Maven中自动代码检查插件
+            <!----></div></a> <span class="date">07-12</span></dt></dl> <dl><dd></dd> <dt><a href="/archives/" class="more">更多文章&gt;</a></dt></dl></div></div></main></div> <div class="footer"><div class="icons"><a href="mailto:745925668@qq.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://datamining.blog.csdn.net/" title="CSDN" target="_blank" class="iconfont icon-csdn"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2016-2024
+    <span><a href="https://datamining.blog.csdn.net/">Jast-zsh</a> | <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/blob/master/LICENSE" target="_blank">MIT License</a></span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><div></div></div></div>
+    <script src="/assets/js/app.06cc3a6d.js" defer></script><script src="/assets/js/2.dee4bc9e.js" defer></script><script src="/assets/js/144.6ab29f67.js" defer></script>
+  </body>
+</html>
